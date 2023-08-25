@@ -3,6 +3,8 @@ import Phaser from "phaser";
 export class MainMenuScene extends Phaser.Scene {
   constructor() {
     super({ key: "MainMenuScene" });
+
+    this.selectedButton = null;
   }
 
   preload() {
@@ -24,11 +26,18 @@ export class MainMenuScene extends Phaser.Scene {
     // eslint-disable-next-line no-unused-vars
     const logo = this.add.image(this.cameras.main.width / 2, 150, "logo");
 
-    const startButton = this.addButton(this.cameras.main.width / 2, 300, "startButton", "startButtonSelected");
+    // Añadimos los botones
+    const startButton = this.addButton(this.cameras.main.width / 2, 280, "startButton", "startButtonSelected");
     const instructionsButton = this.addButton(this.cameras.main.width / 2, 360, "instructionButton", "instructionButtonSelected");
+
+    // Al hacer click en el boton jugar iniciara la escena de GameScene
+    // startButton.on("pointerdown", () => {
+    //   this.scene.start("GameScene");
+    // });
 
     let selectedButton = startButton;
 
+    // Creamos el efecto para que cambie de textura el boton al pasar el puntero
     startButton.on("pointerover", function () {
       if (selectedButton !== startButton) {
         startButton.setTexture("startButtonSelected");
@@ -45,6 +54,7 @@ export class MainMenuScene extends Phaser.Scene {
       }
     });
 
+    // Creamos el efecto para que cambie la textura del boton al cambiar con las flechas del teclado
     this.input.keyboard.on("keydown", function (event) {
       if (event.key === "ArrowUp" || event.key === "ArrowDown") {
         if (selectedButton === startButton) {
@@ -58,8 +68,28 @@ export class MainMenuScene extends Phaser.Scene {
         }
       }
     });
+
+    this.input.keyboard.on("keydown-ENTER", () => {
+      if (selectedButton === startButton) {
+        this.scene.start("GameScene");
+      }
+    });
+
+    this.changeSceneGame(startButton, selectedButton);
   }
 
+  // Funcion para cambiar la escena dependiendo del boton presionado
+  changeSceneGame(startButton, instructionsButton) {
+    startButton.on("pointerdown", () => {
+      this.scene.start("GameScene");
+    });
+
+    instructionsButton.on("pointerdown", () => {
+
+    });
+  }
+
+  // Creamos la funcion para añadir los botones
   addButton(x, y, image, selectedImage) {
     const button = this.add.sprite(x, y, image);
     button.selectedImage = selectedImage;

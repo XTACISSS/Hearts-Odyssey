@@ -2,7 +2,7 @@ import Phaser from "phaser";
 
 export class SceneB extends Phaser.Scene {
   constructor() {
-    super({ key: "UIScene", active: true });
+    super({ key: "UIScene", active: false });
 
     // this.scoreText;
     // this.livesText;
